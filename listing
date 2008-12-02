@@ -1,0 +1,24 @@
+game.py:
+	fichier de jeu principal
+	celui qu'on lance pour avoir un aperçu global
+
+automaton.py:
+	gère les automates cellulaires génériques :
+	automaton.create(nombre de dimensions, fonction de règles, etatpardéfaut=0)
+	automaton.next()
+	automaton.display()
+	automaton.set(cell, valeur)
+
+lifegame.py:
+	plus particulièrement, le jeu de la vie
+	lifegame.create()  options : torique ou infini, borné, de taille finie
+	lifegame.next()
+	lifegame.display() options : sur la console, sur une fenêtre
+	lifegame.set(cell, valeur)
+
+corail.py:
+	plus particulièrement, le récif corallien
+
+
+
+
