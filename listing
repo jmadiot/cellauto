@@ -2,6 +2,11 @@ game.py:
 	fichier de jeu principal
 	celui qu'on lance pour avoir un aperçu global
 
+unidim.py:
+	gère les automates unidimensionnels
+	unidim.create(regle)
+	unidim.
+
 automaton.py:
 	gère les automates cellulaires génériques :
 	automaton.create(nombre de dimensions, fonction de règles, etatpardéfaut=0)
@@ -19,6 +24,10 @@ lifegame.py:
 corail.py:
 	plus particulièrement, le récif corallien
 
+
+
+TODO:
+	hexagonal
 
 
 
