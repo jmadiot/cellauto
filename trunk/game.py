@@ -15,7 +15,7 @@ def printline(tab):
 
 
 
-if __name__ == "__main__" :
+if __name__ == "__main__" and False :
 	
 	w=150
 	
@@ -32,4 +32,62 @@ if __name__ == "__main__" :
 		printline(b)
 		next_step(b, a)
 		printline(a)
+
+
+from automaton import bidim
+
+def rules(neig):
+	c = 0
+	c += neig(-1, 0) + neig(1, 0)
+	c += neig(-1, 1) + neig(0, 1) + neig(1, 1)
+	c += neig(-1, -1) + neig(0, -1) + neig(1, -1)
+	if c == 3:
+		return 1
+	elif c == 2:
+		return neig(0, 0)
+	else:
+		return 0
+
+
+a = bidim(rules)
+a.setcell(2,2,1)
+a.setcell(2,3,1)
+a.setcell(2,4,1)
+a.setcell(1,4,1)
+a.setcell(0,3,1)
+
+a.display()
+a.step()
+a.display()
+a.step()
+a.display()
+a.step()
+a.display()
+a.step()
+a.display()
+a.step()
+a.display()
+a.step()
+a.display()
+a.step()
+a.display()
+a.step()
+a.display()
+a.step()
+a.display()
+a.step()
+a.display()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
