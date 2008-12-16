@@ -4,25 +4,6 @@ from automaton import bidim
 import time
 
 
-#classe servant a avoir un step fonctionnel...(copie de automaton.py)
-#ajout du squelette par defaut on suppose que 2 => squelette
-class machin(object):
-	def copy_matrix(self,a):
-		c=a[:]
-		for i in xrange(len(a)):
-			c[i]=a[i][:]
-		return c
-
-	def step(self, jeu, rules):
-		next = self.copy_matrix(jeu)
-		n = len(jeu)
-		p = len(jeu[0])
-		for y in xrange(n):
-			for x in xrange(p):
-				next[y][x] = rules(lambda dx,dy : jeu[(y+dy)%n][(x+dx)%p])
-		return(next)
-
-
 class interface(Tk):
 	def __init__(self, rules, w = 10, h = 10, cote=50):		
 		
@@ -113,8 +94,7 @@ class interface(Tk):
 	#fonction servant a avancer d un pas (est aussi appelee par le bouton)
 	def next(self):
 		self.dessin_cadrillage()
-		machin1 = machin()
-		self.bidim.cells = machin1.step(rules = rules,jeu = self.bidim.cells)
+		self.bidim.step()
 		self.remplir()
 	
 	def remplir(self):
@@ -157,14 +137,7 @@ def rules(neig):
 		return neig(0, 0)
 	else:
 		return 0				
-		
-a = bidim(rules)
-a.setcell(2,2,1)
-a.setcell(2,3,1)
-a.setcell(2,4,1)
-a.setcell(1,4,1)
-a.setcell(0,3,1)
-		
+
 	
 		
 interface(rules = rules)
