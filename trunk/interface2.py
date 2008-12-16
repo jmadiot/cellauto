@@ -5,7 +5,8 @@ import time
 
 
 class interface(Tk):
-	def __init__(self, rules, w = 10, h = 10, cote=50):		
+	def __init__(self, rules, w = 10, h = 10, cote=50):
+		self.mousedown = 0
 		
 		self.bidim = bidim(rules, w=w, h=h)
 		#initialisation de la fenetre Tk
@@ -37,6 +38,7 @@ class interface(Tk):
 
 		#Interactivite de l aire de dessin et de l Entry
 		self.canva.bind("<ButtonPress-1>", self.mouseDown)
+		self.canva.bind("<B1-Motion>", self.mouseB1Motion)
 		self.input.bind("<Return>", self.animation)
 
 		#Affichage des objets sur la fenetre
@@ -70,16 +72,16 @@ class interface(Tk):
 			x = x + self.cote
 			i = i + 1
 	
-	#creation des petites bulles de localisation des cellule		
+	#creation des petites bulles de localisation des cellules		
 	def cellule(self,i,j,couleur = ''):#i et j le i eme carre de la j eme colonne
 		x = i*self.cote
 		y = j*self.cote
 		if couleur == '':
-			if self.bidim.cells[i][j] == 0:
+			if self.bidim.cells[j][i] == 0:
 				couleur = 'navy'
-			elif self.bidim.cells[i][j] == 1:
+			elif self.bidim.cells[j][i] == 1:
 				couleur = 'yellow'
-			elif self.bidim.cells[i][j] == 2:
+			elif self.bidim.cells[j][i] == 2:
 				couleur = 'red'
 			else: 
 				pass
@@ -87,8 +89,15 @@ class interface(Tk):
 
 	#fonction appelee lorsque l on clique sur la fenetre
 	def mouseDown(self,event):
-		i,j = event.x/self.cote, event.y/self.cote		self.bidim.cells[i][j] = (self.bidim.cells[i][j] + 1)%3
-		self.cellule(i, j)		
+		i,j = event.x/self.cote, event.y/self.cote
+		if i<self.bidim.w and j<self.bidim.h and i>=0 and j>=0:			self.laststate = (self.bidim.cells[j][i] + 1)%3			self.bidim.cells[j][i] = (self.bidim.cells[j][i] + 1)%3
+			self.cellule(i, j)
+		
+	#pareil
+	def mouseB1Motion(self,event):
+		i, j = event.x/self.cote, event.y/self.cote
+		if i<self.bidim.w and j<self.bidim.h and i>=0 and j>=0:			self.bidim.cells[j][i] = self.laststate
+			self.cellule(i, j)
 	
 
 	#fonction servant a avancer d un pas (est aussi appelee par le bouton)
@@ -98,12 +107,11 @@ class interface(Tk):
 		self.remplir()
 	
 	def remplir(self):
-		i = 0
 		j = 0
-		while i < self.bidim.h:
-			j = 0
-			while j < self.bidim.w:
-				a = self.bidim.cells[i][j]
+		while j < self.bidim.h:
+			i = 0
+			while i < self.bidim.w:
+				a = self.bidim.cells[j][i]
 				if a == 0:#0 => rien
 					pass
 				elif a ==1:# 1 => cellule
@@ -112,15 +120,15 @@ class interface(Tk):
 					self.cellule(i,j,'red')
 				else:#rien 
 					pass
-				j = j+1
-			i=i+1
+				i+=1
+			j+=1
 
 	#truc appele quand on appuie sur entree dans entry 
 	def animation(self,event):
 		a = int(self.input.get())
 		i = 0
 		while i < a:
-			self.after(200)
+			self.after(0)
 			self.update_idletasks()
 			self.next()
 			i = i + 1
@@ -140,4 +148,4 @@ def rules(neig):
 
 	
 		
-interface(rules = rules)
+interface(rules = rules, w=20, h=10)
