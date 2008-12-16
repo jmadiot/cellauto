@@ -1,5 +1,6 @@
 from Tkinter import *
 from automaton import *
+from automaton import bidim
 import time
 
 
@@ -23,27 +24,28 @@ class machin(object):
 
 
 class interface(Tk):
-	def __init__(self, rules, cote=50,t=[]):		
+	def __init__(self, rules, w = 10, h = 10, cote=50):		
+		
+		self.bidim = bidim(rules, w=w, h=h)
 		#initialisation de la fenetre Tk
 		Tk.__init__(self)
 
 		#differents attributs de l objet interface
 		#tels que la regle utilise la matrice le nombre de ligne,colonne , la largeur,et hauteur de la fenetre
-		self.rules = rules
-
-		self.jeu = t
-		self.ligne = len(self.jeu)
-		self.colonne = len(self.jeu[0])
 		self.cote = cote
-		largeur = self.cote*self.colonne
-		hauteur = self.cote*self.ligne
+
+		if self.cote < 3:
+			self.width = 0
+		else:
+			self.width = 1
+
 		#fin attributs
 		
 		
 		#definition d objets		
 		self.cadre = Frame(self)
 		#definition d une aire ou on peut dessiner
-		self.canva = Canvas(self.cadre, width = largeur, height = hauteur, bg = "white")
+		self.canva = Canvas(self.cadre, width = self.cote*self.bidim.w, height = self.cote*self.bidim.h, bg = "white")
 		#definition d un bouton
 		self.bouton = Button(self.cadre, text = 'pas a pas', command = self.next)
 		#definition d un label
@@ -77,11 +79,11 @@ class interface(Tk):
 	#i,j coordonnees dans la matrice
 		x,y = 0, 0
 		i,j = 0, 0
-		while i < self.colonne:
+		while i < self.bidim.w:
 			j = 0
 			y = 0		
-			while j < self.ligne:
-				self.canva.create_rectangle(x, y, x+self.cote, y+self.cote, fill='navy')
+			while j < self.bidim.h:
+				self.canva.create_rectangle(x, y, x+self.cote, y+self.cote, fill='navy', width = self.width)
 				y = y + self.cote
 				j = j + 1
 			x = x + self.cote
@@ -89,22 +91,22 @@ class interface(Tk):
 	
 	#creation des petites bulles de localisation des cellule		
 	def cellule(self,i,j,couleur = ''):#i et j le i eme carre de la j eme colonne
-		x = i*self.cote + self.cote/2
-		y = j*self.cote + self.cote/2
+		x = i*self.cote
+		y = j*self.cote
 		if couleur == '':
-			if self.jeu[i][j] == 0:
+			if self.bidim.cells[i][j] == 0:
 				couleur = 'navy'
-			elif self.jeu[i][j] == 1:
+			elif self.bidim.cells[i][j] == 1:
 				couleur = 'yellow'
-			elif self.jeu[i][j] == 2:
+			elif self.bidim.cells[i][j] == 2:
 				couleur = 'red'
 			else: 
 				pass
-		self.canva.create_oval(x-self.cote/3,y-self.cote/3,x+self.cote/3,y+self.cote/3,fill=couleur, width = 0)
+		self.canva.create_rectangle(x,y,x+self.cote,y+self.cote,fill=couleur, width = self.width)
 
 	#fonction appelee lorsque l on clique sur la fenetre
 	def mouseDown(self,event):
-		i,j = event.x/self.cote, event.y/self.cote		self.jeu[i][j] = (self.jeu[i][j] + 1)%3
+		i,j = event.x/self.cote, event.y/self.cote		self.bidim.cells[i][j] = (self.bidim.cells[i][j] + 1)%3
 		self.cellule(i, j)		
 	
 
@@ -112,16 +114,16 @@ class interface(Tk):
 	def next(self):
 		self.dessin_cadrillage()
 		machin1 = machin()
-		self.jeu = machin1.step(rules = rules,jeu = self.jeu)
+		self.bidim.cells = machin1.step(rules = rules,jeu = self.bidim.cells)
 		self.remplir()
 	
 	def remplir(self):
 		i = 0
 		j = 0
-		while i < self.ligne:
+		while i < self.bidim.h:
 			j = 0
-			while j < self.colonne:
-				a = self.jeu[i][j]
+			while j < self.bidim.w:
+				a = self.bidim.cells[i][j]
 				if a == 0:#0 => rien
 					pass
 				elif a ==1:# 1 => cellule
@@ -165,4 +167,4 @@ a.setcell(0,3,1)
 		
 	
 		
-interface(rules = rules, t = a.cells)
+interface(rules = rules)
