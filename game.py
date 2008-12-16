@@ -17,7 +17,7 @@ def printline(tab):
 
 if __name__ == "__main__" and False :
 	
-	w=150
+	w=50
 	
 	a = range(w)
 	for i in range(w):
@@ -27,7 +27,7 @@ if __name__ == "__main__" and False :
 	b=range(w)
 	
 	printline(a)
-	for i in range(w/2):
+	for i in range(10):
 		next_step(a, b)
 		printline(b)
 		next_step(b, a)
