@@ -102,6 +102,7 @@ class interface(Tk):
 
 	#fonction servant a avancer d un pas (est aussi appelee par le bouton)
 	def next(self):
+		self.canva.delete(ALL)#acceleration de l interface.ecrire les cases les unes sur les autres le ralentissait 
 		self.dessin_cadrillage()
 		self.bidim.step()
 		self.remplir()
