@@ -4,6 +4,44 @@ from automaton import bidim
 import time
 
 
+class commande(Tk):
+	def __init__(self, rules):
+		Tk.__init__(self)
+		#definition d objets		
+		self.cadre = Frame(self)
+		#definition d un label
+		self.texte1 = Label(self.cadre, text = 'cote d un carre')
+		self.texte2 = Label(self.cadre, text = 'largeur')
+		self.texte3 = Label(self.cadre, text = 'hauteur')
+
+		#definition d Entries
+		self.input1 = Entry(self.cadre)
+		self.input2 = Entry(self.cadre)
+		self.input3 = Entry(self.cadre)
+
+
+
+		#binding
+		self.input3.bind("<Return>", self.commande)
+
+		#Affichage des objets sur la fenetre
+		self.cadre.grid(row=0,column=0)
+		self.input1.grid(row=2,column=0)
+		self.texte2.grid(row=3,column=0)
+		self.input2.grid(row=4,column=0)
+		self.texte3.grid(row=5,column = 0)
+		self.input3.grid(row=6,column=0)		
+		self.texte1.grid(row=1,column=0)
+		self.mainloop()
+
+	def commande(self,event):
+		self.cote = int(self.input1.get())
+		self.w = int(self.input2.get())
+		self.h = int(self.input3.get())
+		self.fenetre = interface(rules, w = self.w, h = self.h, cote = self.cote)
+
+		
+
 class interface(Tk):
 	def __init__(self, rules, w = 10, h = 10, cote=50):
 		self.mousedown = 0
@@ -33,12 +71,15 @@ class interface(Tk):
 		#definition d un label
 		self.texte = Label(self.cadre, text = 'donnez un nombre puis appuyez sur entree')		
 		#definition d une Entry
-		self.input = Entry(self.cadre)		
+		self.input = Entry(self.cadre)	
 
 
 		#Interactivite de l aire de dessin et de l Entry
 		self.canva.bind("<ButtonPress-1>", self.mouseDown)
 		self.canva.bind("<B1-Motion>", self.mouseB1Motion)
+		self.bind("<Key-space>", self.startstop)
+
+		self.anim=False
 		self.input.bind("<Return>", self.animation)
 
 		#Affichage des objets sur la fenetre
@@ -56,6 +97,15 @@ class interface(Tk):
 		#boucle d attente d evenements graphiques		
 		self.mainloop()
 
+	def startstop(self, event):
+		self.anim=not self.anim
+		if self.anim:
+			self.animate()
+	
+	def animate(self):
+		if(self.anim):
+			self.next()
+			self.after(10, self.animate)
 
 	def dessin_cadrillage(self):
 	#x,y coordonnees du rectangle (coin haut gauche)
@@ -148,5 +198,9 @@ def rules(neig):
 		return 0				
 
 	
-		
-interface(rules = rules, w=20, h=10)
+commande(rules)		
+#<<<<<<< .mine
+#interface(rules = rules,w = 20)
+#=======
+#interface(rules = rules, w=20, h=10)
+#>>>>>>> .r10
