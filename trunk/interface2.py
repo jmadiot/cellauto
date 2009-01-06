@@ -18,6 +18,9 @@ class commande(Tk):
 		self.input1 = Entry(self.cadre)
 		self.input2 = Entry(self.cadre)
 		self.input3 = Entry(self.cadre)
+		self.input1.insert(0, "15")
+		self.input2.insert(0, "20")
+		self.input3.insert(0, "20")
 
 
 
@@ -65,7 +68,7 @@ class interface(Tk):
 		#definition d objets		
 		self.cadre = Frame(self)
 		#definition d une aire ou on peut dessiner
-		self.canva = Canvas(self.cadre, width = self.cote*self.bidim.w, height = self.cote*self.bidim.h, bg = "white")
+		self.canva = Canvas(self.cadre, width = self.cote*self.bidim.w, height = self.cote*self.bidim.h, bg = "navy")
 		#definition d un bouton
 		self.bouton = Button(self.cadre, text = 'pas a pas', command = self.next)
 		#definition d un label
@@ -108,19 +111,11 @@ class interface(Tk):
 			self.after(10, self.animate)
 
 	def dessin_cadrillage(self):
-	#x,y coordonnees du rectangle (coin haut gauche)
-	#i,j coordonnees dans la matrice
-		x,y = 0, 0
-		i,j = 0, 0
-		while i < self.bidim.w:
-			j = 0
-			y = 0		
-			while j < self.bidim.h:
-				self.canva.create_rectangle(x, y, x+self.cote, y+self.cote, fill='navy', width = self.width)
-				y = y + self.cote
-				j = j + 1
-			x = x + self.cote
-			i = i + 1
+		#self.create_rectangle(0, 0, self.bidim.w*self.cote, self.bidim.h*self.cote, fill=navy)
+		for i in xrange(self.bidim.w):
+			self.canva.create_line(i*self.cote, 0, i*self.cote, self.bidim.h*self.cote, width=self.width)
+		for j in xrange(self.bidim.h):
+			self.canva.create_line(0, j*self.cote, self.bidim.w*self.cote, j*self.cote, width=self.width)
 	
 	#creation des petites bulles de localisation des cellules		
 	def cellule(self,i,j,couleur = ''):#i et j le i eme carre de la j eme colonne
