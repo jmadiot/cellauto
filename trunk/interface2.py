@@ -11,8 +11,10 @@ class commande(Tk):
 		self.cadre = Frame(self)
 		#definition d un label
 		self.texte1 = Label(self.cadre, text = 'cote d un carre')
-		self.texte2 = Label(self.cadre, text = 'largeur')
-		self.texte3 = Label(self.cadre, text = 'hauteur')
+		self.texte2 = Label(self.cadre, text = 'nombre de carre par ligne')
+		self.texte3 = Label(self.cadre, text = 'nombre de carre par colonne')
+		#Bouton OK
+		self.button = Button(self.cadre, text = 'OK', command = self.command)
 
 		#definition d Entries
 		self.input1 = Entry(self.cadre)
@@ -35,6 +37,7 @@ class commande(Tk):
 		self.texte3.grid(row=5,column = 0)
 		self.input3.grid(row=6,column=0)		
 		self.texte1.grid(row=1,column=0)
+		self.button.grid(row = 7, column = 0)
 		self.mainloop()
 
 	def commande(self,event):
@@ -42,7 +45,12 @@ class commande(Tk):
 		self.w = int(self.input2.get())
 		self.h = int(self.input3.get())
 		self.fenetre = interface(rules, w = self.w, h = self.h, cote = self.cote)
-
+	
+	def command(self):
+		self.cote = int(self.input1.get())
+		self.w = int(self.input2.get())
+		self.h = int(self.input3.get())
+		self.fenetre = interface(rules, w = self.w, h = self.h, cote = self.cote)
 		
 
 class interface(Tk):
@@ -194,8 +202,4 @@ def rules(neig):
 
 	
 commande(rules)		
-#<<<<<<< .mine
-#interface(rules = rules,w = 20)
-#=======
-#interface(rules = rules, w=20, h=10)
-#>>>>>>> .r10
+
