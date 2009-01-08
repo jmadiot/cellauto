@@ -28,6 +28,9 @@ corail.py:
 
 TODO:
 	hexagonal
+	psyco
+	ctypes
+	numpy
 
 
 
