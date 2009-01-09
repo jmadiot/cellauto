@@ -14,7 +14,7 @@ class commande(Tk):
 		Tk.__init__(self)
 		
 		#definition d'objets
-		self.geometry("%dx%d%+d%+d" % (400, 200, 20, 20))
+		self.geometry("%dx%d%+d%+d" % (400, 300, 20, 20))
 		self.cadre = Frame(self)
 		
 		#definition d'un label
@@ -56,9 +56,12 @@ class commande(Tk):
 		
 		#Affichage des objets sur la fenetre	
 		
-		Radiobutton(self, text="Conway's Game of Life", variable=self.mode, value=1, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
-		Radiobutton(self, text="Coral reef",            variable=self.mode, value=2, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
-		Radiobutton(self, text="Coral ramif. reef",            variable=self.mode, value=3, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
+		group=Frame(self)
+		group.grid(columnspan=2)
+		Radiobutton(group, text="Conway's Game of Life", variable=self.mode, value=1, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
+		Radiobutton(group, text="Coral reef",            variable=self.mode, value=2, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
+		Radiobutton(group, text="Coral ramif. reef",     variable=self.mode, value=3, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
+		Radiobutton(group, text="HighLife",              variable=self.mode, value=4, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
 		
 		Label(self, text = 'Exemples de grilles').grid(column=1, row=2)
 		
@@ -100,6 +103,12 @@ class commande(Tk):
 			self.input3.insert(0, "70")
 			for radio in self.examples:
 				radio.config(state="disabled")
+		elif self.mode.get() == 4:
+			self.input1.insert(0, "5")
+			self.input2.insert(0, "100")
+			self.input3.insert(0, "50")
+			for radio in self.examples:
+				radio.config(state="normal")
 			
 
 			
@@ -116,18 +125,23 @@ class commande(Tk):
 				self.fenetre = interface(conway=True, w=w, h=h, cote=cote, motif=motif)
 			elif self.mode.get() == 2:
 				self.fenetre = interface(rules=reef_rules, w=w, h=h, cote=cote)
-			else:
+			elif self.mode.get() == 3:
 				self.fenetre = interface(rules=ramif_rules, w=w, h=h, cote=cote)
+			elif self.mode.get() == 4:
+				self.fenetre = interface(conway=True, w=w, h=h, cote=cote, motif=motif, highlife=True)
 			
 		
 
 class interface(Tk):
-	def __init__(self, rules=None, w=10, h=10, cote=15, conway=False, colors=None, motif=False):
+	def __init__(self, rules=None, w=10, h=10, cote=15, conway=False, colors=None, motif=False, highlife=False):
 		self.mousedown = 0
 		
-		if conway:
+		if conway and not highlife:
 			self.bidim = gameoflife(w=w, h=h, motif=motif)
-			self.colors = ["black", "yellow"]
+			self.colors = ["navy", "yellow"]
+		elif highlife:
+			self.bidim = highlife(w=w, h=h, motif=motif)
+			self.colors = ["navy", "yellow"]
 		else:
 			self.bidim = bidim(rules, w, h)
 			self.colors = ['navy', 'green', 'green', 'yellow', 'orange', 'red', 'purple', 'black']
@@ -135,25 +149,20 @@ class interface(Tk):
 		#initialisation de la fenetre Tk
 		Tk.__init__(self)
 
-		#differents attributs de l objet interface
-		#tels que la regle utilise la matrice le nombre de ligne,colonne , la largeur,et hauteur de la fenetre
+		#attributs de l objet interface
 		self.cote = cote
 		self.grille = self.cote >= 3
 		
 		
-		#fin attributs
-		
-		
 		#definition d objets		
 		self.cadre = Frame(self)
-		#definition d une aire ou on peut dessiner
-		self.canva = Canvas(self.cadre, width = self.cote*self.bidim.w, height = self.cote*self.bidim.h, bg = self.colors[0])
+		self.canva = Canvas(self, width = self.cote*self.bidim.w, height = self.cote*self.bidim.h, bg = self.colors[0])
 		#definition d un bouton
-		self.bouton = Button(self.cadre, text = 'pas a pas', command = self.next)
+		self.bouton = Button(self, text = 'pas a pas', command = self.next)
 		#definition d un label
-		self.texte = Label(self.cadre, text = 'donnez un nombre puis appuyez sur entree')		
+		self.texte = Label(self, text = "Effectuer n etapes : ")
 		#definition d une Entry
-		self.input = Entry(self.cadre)	
+		self.input = Entry(self)	
 
 
 		#Interactivite de l aire de dessin et de l Entry
@@ -166,10 +175,10 @@ class interface(Tk):
 		self.input.bind("<Return>", self.animation)
 
 		#Affichage des objets sur la fenetre
-		self.cadre.grid(row=1,column=1)		self.canva.grid(row = 0, column = 0)
-		self.bouton.grid(row = 1, column = 0)
-		self.input.grid(row = 3, column = 0)
-		self.texte.grid(row = 2, column = 0)
+		self.cadre.grid(row=1,columnspan=2)		self.canva.grid(row = 0, columnspan = 2)
+		self.bouton.grid(row = 1, columnspan=2)
+		self.input.grid(row = 2, column = 1, sticky=W)
+		self.texte.grid(row = 2, column = 0, sticky=E)
 
 		#dessin du cadrillage bleu
 		self.dessin_cadrillage()
@@ -211,7 +220,7 @@ class interface(Tk):
 	#fonction appelee lorsque l on clique sur la fenetre
 	def mouseDown(self,event):
 		i,j = event.x/self.cote, event.y/self.cote
-		if i<self.bidim.w and j<self.bidim.h and i>=0 and j>=0:			self.laststate = (self.bidim.cells[j][i] + 1)%2			self.bidim.cells[j][i] = (self.bidim.cells[j][i] + 1)%2
+		if i<self.bidim.w and j<self.bidim.h and i>=0 and j>=0:			self.laststate = int(not(bool(self.bidim.cells[j][i])))			self.bidim.cells[j][i] = self.laststate
 			self.cellule(i, j)
 		
 	#pareil
@@ -263,7 +272,7 @@ def rules(neig):
 	elif c == 2:
 		return neig(0, 0)
 	else:
-		return 0				
+		return 0
 
 	
 commande(rules)		
