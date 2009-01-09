@@ -63,6 +63,22 @@ def ramif_rules(v):
 	else:
 		return c+1
 
+def rules(v):
+	c = v(0,0)
+	if c == 0:
+		nv = tor(v(-1, 0)) + tor(v(1, 0))
+		nv += tor(v(0, 1)) + tor(v(0, -1))
+		if nv:
+			if not random.randint(0,4*4/nv):
+				return 1
+			else:
+				return 0
+		else:
+			return 0		
+	elif c==7:
+		return 7
+	else:
+		return c+1
 
 
 

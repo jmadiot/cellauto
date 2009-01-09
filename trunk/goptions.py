@@ -4,17 +4,19 @@ from Tkinter import *
 import time
 
 from conway import gameoflife, examples as conway_examples
+import various
 from recif import rules as reef_rules
 from recif import ramif_rules as ramif_rules
 from automaton import bidim
 
+import lifelikes
 
 class commande(Tk):
-	def __init__(self, rules):
+	def __init__(self):
 		Tk.__init__(self)
 		
 		#definition d'objets
-		self.geometry("%dx%d%+d%+d" % (400, 400, 20, 20))
+		self.geometry("%dx%d%+d%+d" % (600, 500, 20, 20))
 		self.cadre = Frame(self)
 		
 		#definition d'un label
@@ -43,10 +45,35 @@ class commande(Tk):
 		
 		self.examples=[]
 		for i in xrange(len(conway_examples)):
-			(_, text) = conway_examples[i]
+			(text, _) = conway_examples[i]
 			self.examples.append(
 				Radiobutton(self.conway, text=text, variable=self.example,
 				value=i))
+
+		#Life-like
+		self.lifelikeframe = Frame(self)
+		self.lifelikevar = IntVar()
+		self.lifelikevar.set(0)
+		
+		self.lifelikes=[]
+		self.lifelikes.append(
+			Radiobutton(self.lifelikeframe, text="Custom",
+			variable=self.lifelikevar, value=0, command=self.lifelikechange))
+		
+		for i in xrange(len(lifelikes.lifelikes_examples)):
+			(_, text) = lifelikes.lifelikes_examples[i]
+			self.lifelikes.append(
+				Radiobutton(self.lifelikeframe, text=text,
+				variable=self.lifelikevar, value=i+1, command=self.lifelikechange))
+		
+		self.llcommand = Entry(self.lifelikeframe)
+		self.llcommand.insert(0, "1/1")
+		self.llcommand.config(state="disabled")
+		Label(self.lifelikeframe, text = 'Exemples de life-likes').grid()
+		self.llcommand.grid(sticky=W)
+		for radio in self.lifelikes:
+			radio.grid(sticky=W)
+		
 		
 		for radio in self.examples:
 			radio.grid(sticky=W)
@@ -60,13 +87,14 @@ class commande(Tk):
 		group.grid(columnspan=2)
 		Radiobutton(group, text="Conway's Game of Life", variable=self.mode, value=1, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
 		Radiobutton(group, text="HighLife",              variable=self.mode, value=4, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
-		Radiobutton(group, text="Coral reef",            variable=self.mode, value=2, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
-		Radiobutton(group, text="Coral ramif. reef",     variable=self.mode, value=3, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
+		Radiobutton(group, text="Coral",                 variable=self.mode, value=2, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
+		Radiobutton(group, text="Life-like",             variable=self.mode, value=3, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
 		
 		Label(self, text = 'Exemples de grilles').grid(column=1, row=2)
 		
 		self.cadre.grid()#(fill=X)
 		self.conway.grid(column=1, row=3)
+		self.lifelikeframe.grid(column=2, row=0, rowspan=99)
 		self.title("Commande")
 		self.texte1.grid(row=2, column=0, sticky=W)#anchor=W)
 		self.input1.grid(row=2, column=1, sticky=W)#anchor=W)
@@ -81,21 +109,38 @@ class commande(Tk):
 		
 		self.mainloop()
 	
+	
+	def lifelikechange(self):
+		if self.lifelikevar.get()==0 and self.mode.get() == 3:
+			self.llcommand.config(state="normal")
+		else:
+			self.llcommand.config(state="normal")
+			self.llcommand.delete(0, END)
+			self.llcommand.insert(0, lifelikes.lifelikes_examples[self.lifelikevar.get()-1][0])
+			self.llcommand.config(state="disabled")
+		
+		
+	
 	def changemode(self):
 		self.input1.delete(0, END)
 		self.input2.delete(0, END)
 		self.input3.delete(0, END)
+		self.lifelikechange()
 		if self.mode.get() == 1:
 			self.input1.insert(0, "5")
 			self.input2.insert(0, "100")
 			self.input3.insert(0, "50")
 			for radio in self.examples:
 				radio.config(state="normal")
+			for radio in self.lifelikes:
+				radio.config(state="disabled")
 		elif self.mode.get() == 2:
 			self.input1.insert(0, "5")
 			self.input2.insert(0, "70")
 			self.input3.insert(0, "70")
 			for radio in self.examples:
+				radio.config(state="disabled")
+			for radio in self.lifelikes:
 				radio.config(state="disabled")
 		elif self.mode.get() == 3:
 			self.input1.insert(0, "5")
@@ -103,12 +148,16 @@ class commande(Tk):
 			self.input3.insert(0, "70")
 			for radio in self.examples:
 				radio.config(state="disabled")
+			for radio in self.lifelikes:
+				radio.config(state="normal")
 		elif self.mode.get() == 4:
 			self.input1.insert(0, "5")
 			self.input2.insert(0, "100")
 			self.input3.insert(0, "50")
 			for radio in self.examples:
 				radio.config(state="normal")
+			for radio in self.lifelikes:
+				radio.config(state="disabled")
 			
 
 			
@@ -119,28 +168,48 @@ class commande(Tk):
 		h = int(self.input3.get())
 		if not self.busy:
 			#self.busy=True
-			print(self.mode.get())
 			if self.mode.get() == 1:
-				motif=conway_examples[self.example.get()][0]
+				motif=conway_examples[self.example.get()][1]
 				self.fenetre = interface(conway=True, w=w, h=h, cote=cote, motif=motif)
 			elif self.mode.get() == 2:
 				self.fenetre = interface(rules=reef_rules, w=w, h=h, cote=cote)
 			elif self.mode.get() == 3:
-				self.fenetre = interface(rules=ramif_rules, w=w, h=h, cote=cote)
+				num=self.lifelikevar.get()
+				if num==0:
+					command=self.llcommand.get()
+				else:
+					command=lifelikes.lifelikes_examples[num-1][0]
+				born=[]
+				survive=[]
+				n=len(command)
+				i=0
+				while i<n and command[i]!='/':
+					survive.append(int(command[i]))
+					i+=1
+				i+=1
+				while i<n and command[i]!='/':
+					born.append(int(command[i]))
+					i+=1
+				print ("survive:", survive, "born", born)	
+				self.fenetre = interface(lifelike=True, w=w, h=h, cote=cote, born=born, survive=survive)
 			elif self.mode.get() == 4:
+				motif=conway_examples[self.example.get()][1]
 				self.fenetre = interface(conway=True, w=w, h=h, cote=cote, motif=motif, highlife=True)
 			
 		
 
 class interface(Tk):
-	def __init__(self, rules=None, w=10, h=10, cote=15, conway=False, colors=None, motif=False, highlife=False):
+	def __init__(self, rules=None, w=10, h=10, cote=15, lifelike=False, conway=False, colors=None, motif=False, highlife=False, born=[2], survive=[]):
 		self.mousedown = 0
 		
-		if conway and not highlife:
+		if lifelike:
+			self.bidim = lifelikes.lifelike(w=w, h=h, born=born, survive=survive)
+			self.colors = ["navy", "yellow"]
+		elif conway and not highlife:
 			self.bidim = gameoflife(w=w, h=h, motif=motif)
 			self.colors = ["navy", "yellow"]
 		elif highlife:
-			self.bidim = highlife(w=w, h=h, motif=motif)
+			self.bidim = various.highlife(w=w, h=h, motif=motif)
 			self.colors = ["navy", "yellow"]
 		else:
 			self.bidim = bidim(rules, w, h)
@@ -275,5 +344,5 @@ def rules(neig):
 		return 0
 
 	
-commande(rules)		
+commande()#rules)		
 
