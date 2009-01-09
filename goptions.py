@@ -14,7 +14,7 @@ class commande(Tk):
 		Tk.__init__(self)
 		
 		#definition d'objets
-		self.geometry("%dx%d%+d%+d" % (400, 300, 20, 20))
+		self.geometry("%dx%d%+d%+d" % (400, 400, 20, 20))
 		self.cadre = Frame(self)
 		
 		#definition d'un label
