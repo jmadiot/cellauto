@@ -44,31 +44,33 @@ class commande(Tk):
 		self.examples=[]
 		for i in xrange(len(conway_examples)):
 			(_, text) = conway_examples[i]
-			self.examples.append(Radiobutton(self.conway, text=text, variable=self.example, value=i, command=self.changemode))
+			self.examples.append(
+				Radiobutton(self.conway, text=text, variable=self.example,
+				value=i))
 		
 		for radio in self.examples:
-			radio.grid()
+			radio.grid(sticky=W)
 		
 		#binding
 		self.bind("<Return>", self.commande)
 		
 		#Affichage des objets sur la fenetre	
 		
-		Radiobutton(self, text="Conway's Game of Life", variable=self.mode, value=1, command=self.changemode).grid()#.pack(anchor=W)
-		Radiobutton(self, text="Coral reef",            variable=self.mode, value=2, command=self.changemode).grid()#.pack(anchor=W)
-		Radiobutton(self, text="Coral ramif. reef",            variable=self.mode, value=3, command=self.changemode).grid()#.pack(anchor=W)
+		Radiobutton(self, text="Conway's Game of Life", variable=self.mode, value=1, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
+		Radiobutton(self, text="Coral reef",            variable=self.mode, value=2, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
+		Radiobutton(self, text="Coral ramif. reef",            variable=self.mode, value=3, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
 		
 		Label(self, text = 'Exemples de grilles').grid(column=1, row=2)
 		
 		self.cadre.grid()#(fill=X)
 		self.conway.grid(column=1, row=3)
 		self.title("Commande")
-		self.texte1.grid(row=2, column=0)#anchor=W)
-		self.input1.grid(row=2, column=1)#anchor=W)
-		self.texte2.grid(row=3, column=0)#anchor=W)
-		self.input2.grid(row=3, column=1)#anchor=W)
-		self.texte3.grid(row=4, column=0)#anchor=W)
-		self.input3.grid(row=4, column=1)#anchor=W)
+		self.texte1.grid(row=2, column=0, sticky=W)#anchor=W)
+		self.input1.grid(row=2, column=1, sticky=W)#anchor=W)
+		self.texte2.grid(row=3, column=0, sticky=W)#anchor=W)
+		self.input2.grid(row=3, column=1, sticky=W)#anchor=W)
+		self.texte3.grid(row=4, column=0, sticky=W)#anchor=W)
+		self.input3.grid(row=4, column=1, sticky=W)#anchor=W)
 		self.button.grid()
 		self.changemode()
 		
