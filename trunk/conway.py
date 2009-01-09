@@ -31,12 +31,8 @@ class gameoflife:
 		if motif:
 			wm=len(motif[0])
 			hm=len(motif)
-			print motif
 			for y in xrange(hm):
 				for x in xrange(wm):
-					print "w=%d, wm=%d, x=%d" % (w,wm,x)
-					print "h=%d, hm=%d, y=%d" % (h,hm,y)
-					print motif[y][x]
 					self.cells[h/2-hm/2+y][w/2-wm/2+x] = motif[y][x]
 					
 	
@@ -126,7 +122,7 @@ examples = [
 	(launcher, "launcher"),
 	(jardindeden, "jardineden"),
 	(toad, "toad"),
-	(clown110, "clown110"),
+	(clown110, "circus"),
 	(lightweight_ship, "lightweight_ship"),
 	(pulsar, "pulsar")
 ]
