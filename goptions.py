@@ -59,9 +59,9 @@ class commande(Tk):
 		group=Frame(self)
 		group.grid(columnspan=2)
 		Radiobutton(group, text="Conway's Game of Life", variable=self.mode, value=1, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
+		Radiobutton(group, text="HighLife",              variable=self.mode, value=4, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
 		Radiobutton(group, text="Coral reef",            variable=self.mode, value=2, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
 		Radiobutton(group, text="Coral ramif. reef",     variable=self.mode, value=3, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
-		Radiobutton(group, text="HighLife",              variable=self.mode, value=4, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
 		
 		Label(self, text = 'Exemples de grilles').grid(column=1, row=2)
 		
