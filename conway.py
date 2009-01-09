@@ -19,7 +19,7 @@ def default_str_cell(i):
 
 class gameoflife:
 	
-	def __init__(self, w=10, h=10, disp=None):
+	def __init__(self, w=10, h=10, disp=None, motif=False):
 		self.disp = bool(disp) and disp or self.display
 		self.w = w
 		self.h = h
@@ -28,6 +28,17 @@ class gameoflife:
 			self.cells[y]=range(w)
 			for x in xrange(w):
 				self.cells[y][x] = 0
+		if motif:
+			wm=len(motif[0])
+			hm=len(motif)
+			print motif
+			for y in xrange(hm):
+				for x in xrange(wm):
+					print "w=%d, wm=%d, x=%d" % (w,wm,x)
+					print "h=%d, hm=%d, y=%d" % (h,hm,y)
+					print motif[y][x]
+					self.cells[h/2-hm/2+y][w/2-wm/2+x] = motif[y][x]
+					
 	
 	def step(self):
 		voisins = range(self.h)
@@ -74,6 +85,26 @@ class gameoflife:
 
 
 
+cyclicbenzene = [[0,0,1,0,0,0,0,1,0,0],[1,1,0,1,1,1,1,0,1,1],[0,0,1,0,0,0,0,1,0,0]]
+
+glider=[[0,0,1],[1,0,1],[0,1,1]]
+
+launcher=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+[1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+
+examples = [
+	([[0]], "Nothing"),
+	(cyclicbenzene, "cyclicbenzene"),
+	(glider, "glider"),
+	(launcher, "launcher")
+]
 
 
 
