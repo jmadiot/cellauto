@@ -3,8 +3,9 @@
 from Tkinter import *
 import time
 
-from conway import gameoflife
+from conway import gameoflife, examples as conway_examples
 from recif import rules as reef_rules
+from recif import ramif_rules as ramif_rules
 from automaton import bidim
 
 
@@ -13,7 +14,7 @@ class commande(Tk):
 		Tk.__init__(self)
 		
 		#definition d'objets
-		self.geometry("%dx%d%+d%+d" % (300, 200, 20, 20))
+		self.geometry("%dx%d%+d%+d" % (400, 200, 20, 20))
 		self.cadre = Frame(self)
 		
 		#definition d'un label
@@ -27,33 +28,49 @@ class commande(Tk):
 		self.mode.set(1)
 		
 		#Bouton OK
-		self.button = Button(self.cadre, text = 'OK', command = self.commande)
+		self.button = Button(self, text = 'OK', command = self.commande)
 		
 		#definition d'Entries
 		self.input1 = Entry(self.cadre)
 		self.input2 = Entry(self.cadre)
 		self.input3 = Entry(self.cadre)
 		#Valeurs par defaut
-		self.input1.insert(0, "15")
-		self.input2.insert(0, "20")
-		self.input3.insert(0, "20")
+		
+		#Conway
+		self.conway = Frame(self)
+		self.example = IntVar()
+		self.example.set(0)
+		
+		self.examples=[]
+		for i in xrange(len(conway_examples)):
+			(_, text) = conway_examples[i]
+			self.examples.append(Radiobutton(self.conway, text=text, variable=self.example, value=i, command=self.changemode))
+		
+		for radio in self.examples:
+			radio.grid()
 		
 		#binding
 		self.bind("<Return>", self.commande)
 		
 		#Affichage des objets sur la fenetre	
-		self.cadre.pack(fill=X)
 		
-		Radiobutton(self.cadre, text="Conway's Game of Life", variable=self.mode, value=1, command=self.changemode).pack(anchor=W)
-		Radiobutton(self.cadre, text="Coral reef",            variable=self.mode, value=2, command=self.changemode).pack(anchor=W)
+		Radiobutton(self, text="Conway's Game of Life", variable=self.mode, value=1, command=self.changemode).grid()#.pack(anchor=W)
+		Radiobutton(self, text="Coral reef",            variable=self.mode, value=2, command=self.changemode).grid()#.pack(anchor=W)
+		Radiobutton(self, text="Coral ramif. reef",            variable=self.mode, value=3, command=self.changemode).grid()#.pack(anchor=W)
+		
+		Label(self, text = 'Exemples de grilles').grid(column=1, row=2)
+		
+		self.cadre.grid()#(fill=X)
+		self.conway.grid(column=1, row=3)
 		self.title("Commande")
-		self.texte1.pack(anchor=W)
-		self.input1.pack(anchor=W)
-		self.texte2.pack(anchor=W)
-		self.input2.pack(anchor=W)
-		self.texte3.pack(anchor=W)
-		self.input3.pack(anchor=W)
-		self.button.pack(fill=None, anchor=W)
+		self.texte1.grid(row=2, column=0)#anchor=W)
+		self.input1.grid(row=2, column=1)#anchor=W)
+		self.texte2.grid(row=3, column=0)#anchor=W)
+		self.input2.grid(row=3, column=1)#anchor=W)
+		self.texte3.grid(row=4, column=0)#anchor=W)
+		self.input3.grid(row=4, column=1)#anchor=W)
+		self.button.grid()
+		self.changemode()
 		
 		self.busy=False		
 		
@@ -64,13 +81,24 @@ class commande(Tk):
 		self.input2.delete(0, END)
 		self.input3.delete(0, END)
 		if self.mode.get() == 1:
-			self.input1.insert(0, "15")
-			self.input2.insert(0, "20")
-			self.input3.insert(0, "20")
-		else:
+			self.input1.insert(0, "5")
+			self.input2.insert(0, "100")
+			self.input3.insert(0, "50")
+			for radio in self.examples:
+				radio.config(state="normal")
+		elif self.mode.get() == 2:
 			self.input1.insert(0, "5")
 			self.input2.insert(0, "70")
 			self.input3.insert(0, "70")
+			for radio in self.examples:
+				radio.config(state="disabled")
+		elif self.mode.get() == 3:
+			self.input1.insert(0, "5")
+			self.input2.insert(0, "70")
+			self.input3.insert(0, "70")
+			for radio in self.examples:
+				radio.config(state="disabled")
+			
 
 			
 
@@ -82,19 +110,22 @@ class commande(Tk):
 			#self.busy=True
 			print(self.mode.get())
 			if self.mode.get() == 1:
-				self.fenetre = interface(conway=True, w=w, h=h, cote=cote)
-			else:
+				motif=conway_examples[self.example.get()][0]
+				self.fenetre = interface(conway=True, w=w, h=h, cote=cote, motif=motif)
+			elif self.mode.get() == 2:
 				self.fenetre = interface(rules=reef_rules, w=w, h=h, cote=cote)
+			else:
+				self.fenetre = interface(rules=ramif_rules, w=w, h=h, cote=cote)
 			
 		
 
 class interface(Tk):
-	def __init__(self, rules=None, w=10, h=10, cote=15, conway=False, colors=None):
+	def __init__(self, rules=None, w=10, h=10, cote=15, conway=False, colors=None, motif=False):
 		self.mousedown = 0
 		
 		if conway:
-			self.bidim = gameoflife(w=w, h=h)
-			self.colors = ["black", "yellow"] 
+			self.bidim = gameoflife(w=w, h=h, motif=motif)
+			self.colors = ["black", "yellow"]
 		else:
 			self.bidim = bidim(rules, w, h)
 			self.colors = ['navy', 'green', 'green', 'yellow', 'orange', 'red', 'purple', 'black']
@@ -127,6 +158,7 @@ class interface(Tk):
 		self.canva.bind("<ButtonPress-1>", self.mouseDown)
 		self.canva.bind("<B1-Motion>", self.mouseB1Motion)
 		self.bind("<Key-space>", self.startstop)
+		self.bind("<Key-p>", self.printc)
 
 		self.anim=False
 		self.input.bind("<Return>", self.animation)
@@ -145,7 +177,10 @@ class interface(Tk):
 		
 		#boucle d attente d evenements graphiques		
 		self.mainloop()
-
+	
+	def printc(self, _):
+		print self.bidim.cells
+	
 	def startstop(self, event):
 		self.anim=not self.anim
 		if self.anim:
@@ -174,7 +209,7 @@ class interface(Tk):
 	#fonction appelee lorsque l on clique sur la fenetre
 	def mouseDown(self,event):
 		i,j = event.x/self.cote, event.y/self.cote
-		if i<self.bidim.w and j<self.bidim.h and i>=0 and j>=0:			self.laststate = (self.bidim.cells[j][i] + 1)%2			self.bidim.cells[j][i] = (self.bidim.cells[j][i] + 1)%3
+		if i<self.bidim.w and j<self.bidim.h and i>=0 and j>=0:			self.laststate = (self.bidim.cells[j][i] + 1)%2			self.bidim.cells[j][i] = (self.bidim.cells[j][i] + 1)%2
 			self.cellule(i, j)
 		
 	#pareil
@@ -185,6 +220,7 @@ class interface(Tk):
 	
 	#fonction servant a avancer d un pas (est aussi appelee par le bouton)
 	def next(self):
+		#print self.bidim.cells
 		self.canva.delete(ALL)
 		self.dessin_cadrillage()
 		self.bidim.step()
