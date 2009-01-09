@@ -1,0 +1,81 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[normalem]{ulem}
+\usepackage[french]{babel}
+\usepackage{verbatim}
+\usepackage{graphicx}
+
+
+\title{Projet Python : Automates Cellulaires}
+\author{Jean-Marie Madiot, Sylvain Dailler}
+\date{9 janvier 2009}
+
+\begin{document}
+\maketitle{}
+\abstract{Le but de ce projet est d'écrire un programme permettant d'implémenter un jeu de la vie.}
+
+\section{Automates génériques}
+
+On a construit une classe python pouvant gérer les automates cellulaires à une, deux et trois dimensions au niveau du calcul. La grille du jeu peut être borné, torique ou extensible. On a dans ce dernier cas un automate potentiellement infini.
+
+Il s'agit du module automaton contenant les classes pour les automates cellulaires à une, deux ou trois dimensions.
+
+Le constructeur d'un automate nécessite les arguments suivants :
+
+\begin{itemize}
+
+\item{rules : fonction de règles.}
+\item{w, h : dimensions}
+\item{default : état par défaut (par défaut à 0)}
+\item{disp : affichage console}
+\item{str_cell : annexe pour l'affichage console}
+\item{topology : "torus", "infinity", "bounded"}
+\item{radius : rayon de l'automate, c'est à dire la distance maximale d'influence d'une cellule (la distance du voisin le plus éloigné que prend en compte la fonction de règles.)}
+
+\end{itemize}
+
+\section{Interface}
+
+Test d'interface et de python en mode console dans un premier temps. C'est le module d'affichage de secours hérité des classes de automaton.
+
+Choix de Tkinter : facilité et apprentissage d'un module standard donc utile pour créer une application rapidement, par rapport à Gtk, un peu plus difficile mais certes plus complet, et plus joli.
+
+On utilise le widget Canvas de Tkinter et contrairement à toute attente, les objets (lignes, rectangles, ...) se superposent sans s'écraser. La gestion de l'affichage d'un nombre minimal de cellules a aussi permis d'améliorer le temps d'affichage.
+
+
+La gestion des évènements (clavier et souris) simplifie l'utilisation.
+
+\begin{itemsize}
+
+
+\item{un clic simple modifie l'état (défaut ou non défaut)}
+\item{un clic prolongé permet de conserver l'état modifié sans avoir à cliquer sur tous les pixels}
+\item{l'appui sur espace (la plus accessible des touches !) permet de lancer et d'arrêter la simulation}
+\item{on peut rentrer un nombre précis d'étapes pour avoir un comportement plus précis. (Par exemple, l'exemple circus au bout de 110 itérations)}
+\item{on peut exporter la grille de l'automate dans la sortie standard (terminal) en appuyant sur "p", au format python.}
+
+
+\end{itemsize}
+
+On a créé une fenêtre de commande, et une fenêtre d'affichage. C'est un choix ergonomique et conceptuel, de plus plus facile à développer. La fenêtre de commande reste active afin de conserver les options et pouvoir ajuster. On peut également créer plusieurs fenêtres. Un problème parfois engendré est que lors de l'exécution de plusieurs simulations simultanée, l'affichage est retardé par le calcul, et l'image se met à jour plus rarement.
+
+La fenêtre de commande permet de choisir entre plusieurs automates : le jeu de la vie, le récif corallien avec différentes options, ou encore highlife. L'intérêt est que grâce à la modularité, on peut travailler avec n'importe quel automate cellulaire, quelque soit son rayon.
+
+
+\section{Le module Conway}
+
+Le Conway's game of life est largement utilisé pour les exemples d'automates cellulaires. On a donc dédié un module pour améliorer en vitesse cet automate.
+
+En fait, une des opérations les plus coûteuses utilisée est l'appel de fonction passée en argument grâce à un lambda. Le jeu de la vie optimise l'automate générique dans ce cas particulier et nous bénéficions d'un affichage plus fluide.
+
+On a mis des exemples afin de faire profiter à l'utilisateur d'une partie de l'immense potentialité des automates cellulaires, notamment du jeu de la vie.
+
+\section{Récif corallien}
+
+Le récif corallien est un exemple d'automate cellulaire modélisant un phénomène réel. Les paramètres pris en compte sont l'âge d'une cellule (pour elle-même), son état, vivant ou squelette, pour ses voisins, ainsi que la direction dans laquelle elle a été créée. Cela permet de créer des structures ramifiées et c'est encore plus joli.
+
+\end{document}
+
+
+
+
