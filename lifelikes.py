@@ -1,5 +1,6 @@
 #optimisation, generalisation et exemples pour les life-likes
 
+#AFFICHAGE CONSOLE D'UNE CELLULE
 def default_str_cell(i):
 	if int(i):
 		return "O"
@@ -68,6 +69,8 @@ class lifelike:
 		print
 		for i in xrange(1000000):
 			i^i%(i+1)
+
+#EXEMPLES DE LIFE-LIKES AVEC LEURS REGLES
 
 lifelikes_examples = [
 ("45678/3", "Coral"),
