@@ -1,3 +1,5 @@
+#regle pour les recifs corallien
+
 from automaton import bidim
 
 import random
