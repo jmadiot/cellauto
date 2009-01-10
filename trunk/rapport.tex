@@ -84,7 +84,7 @@
 
 \paragraph{} Le calcul dans la partie calcul des automates est loin d'être complètement optimisé, mais par exemple, dans le cas des life-likes, on n'as pas besoin d'appel de fonction passée en argument, et il semble que les performances en sont améliorées.
 
-\paragraph{} Le problème reste que les opérations sont élémentaires mais pas vraiment regroupables. On pourrait utiliser le module {\tt ctypes} de python pour gérer les tableaux. L'idéal serait une somme de huit matrices décalées toriquement, pour calculer rapidement le nombre de voisin, mais l'opération de décaler les éléments d'un tableau est une opération coûteuse en C. (a fortiori d'une matrice)
+\paragraph{} Le problème reste que les opérations sont élémentaires mais pas vraiment regroupables. On pourrait utiliser le module {\tt ctypes} de python pour gérer les tableaux. L'idéal serait une somme de huit matrices décalées toriquement, pour calculer rapidement le nombre de voisins, mais l'opération de décaler les éléments d'un tableau est une opération coûteuse en C. (a fortiori d'une matrice)
 
 \paragraph{} Ainsi une bonne amélioration des performances pourrait être effectuée en faisant le traitement de l'information par un programme externe ou partiellement externe. L'interface restera alors le principal frein à l'affichage. Peut-être que {\tt canvas} n'est pas adapté à la situation, en particulier pour l'affichage de cellules d'un pixel.
 

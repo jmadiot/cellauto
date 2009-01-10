@@ -10,6 +10,8 @@ from automaton import bidim
 
 import lifelikes
 
+
+#FENETRE DE COMMANDE
 class commande(Tk):
 	def __init__(self):
 		Tk.__init__(self)
@@ -81,7 +83,6 @@ class commande(Tk):
 		self.bind("<Return>", self.commande)
 		
 		#Affichage des objets sur la fenetre	
-		
 		group=Frame(self)
 		group.grid(columnspan=2)
 		Radiobutton(group, text="Conway's Game of Life", variable=self.mode, value=1, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
@@ -107,7 +108,7 @@ class commande(Tk):
 		
 		self.mainloop()
 	
-	
+	#RADIO SUR LE CHOIX DU LIFE-LIKE
 	def lifelikechange(self):
 		if self.lifelikevar.get()==0 and self.mode.get() == 3:
 			self.llcommand.config(state="normal")
@@ -116,9 +117,8 @@ class commande(Tk):
 			self.llcommand.delete(0, END)
 			self.llcommand.insert(0, lifelikes.lifelikes_examples[self.lifelikevar.get()-1][0])
 			self.llcommand.config(state="disabled")
-		
-		
 	
+	#RADIO SUR LE CHOIX DE L'AUTOMATE
 	def changemode(self):
 		self.input1.delete(0, END)
 		self.input2.delete(0, END)
@@ -156,10 +156,10 @@ class commande(Tk):
 				radio.config(state="normal")
 			for radio in self.lifelikes:
 				radio.config(state="disabled")
-			
-
-			
-
+	
+	
+		
+	#LANCER UNE INTERFACE FENETREE
 	def commande(self,event=None):
 		cote = int(self.input1.get())
 		w = int(self.input2.get())
@@ -194,11 +194,12 @@ class commande(Tk):
 				self.fenetre = interface(conway=True, w=w, h=h, cote=cote, motif=motif, highlife=True)
 			
 		
-
+#INTERFACE FENETREE
 class interface(Tk):
 	def __init__(self, rules=None, w=10, h=10, cote=15, lifelike=False, conway=False, colors=None, motif=False, highlife=False, born=[2], survive=[]):
 		self.mousedown = 0
 		
+		#INSTANCE D'AUTOMATE
 		if lifelike:
 			self.bidim = lifelikes.lifelike(w=w, h=h, born=born, survive=survive)
 			self.colors = ["navy", "yellow"]
@@ -317,7 +318,7 @@ class interface(Tk):
 				i+=1
 			j+=1
 
-	#truc appele quand on appuie sur entree dans entry 
+	#appele quand on appuie sur entree dans entry 
 	def animation(self,event):
 		a = int(self.input.get())
 		i = 0
@@ -325,21 +326,6 @@ class interface(Tk):
 			self.after(0)
 			self.update_idletasks()
 			self.next()
-			i = i + 1
-
-			
-def rules(neig):
-	c = 0
-	c += neig(-1, 0) + neig(1, 0)
-	c += neig(-1, 1) + neig(0, 1) + neig(1, 1)
-	c += neig(-1, -1) + neig(0, -1) + neig(1, -1)
-	if c == 3:
-		return 1
-	elif c == 2:
-		return neig(0, 0)
-	else:
-		return 0
-
-	
-commande()#rules)		
+			i = i + 1	
+commande()
 

@@ -6,12 +6,15 @@ def copy_matrix(a):
 		c[i]=a[i][:]
 	return c
 
+#AFFICHAGE CONSOLE D'UNE CELLULE
 def default_str_cell(i):
 	if int(i):
 		return "O"
 	else:
 		return " "
 
+
+#DEUX DIMENSIONS : PRINCIPALE CLASSE
 class bidim:
 	
 	def __init__(self, rules, w=10, h=10, default=0, disp=None, str_cell=None):
@@ -36,6 +39,7 @@ class bidim:
 	def setcell(self, x, y, status):
 		self.cells[y][x] = status
 	
+	#AFFICHAGE CONSOLE AU CAS OU
 	def display(self):
 		for line in self.cells:
 			print "".join([self.str_cell(x) for x in line])
