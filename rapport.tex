@@ -12,67 +12,85 @@
 
 \begin{document}
 \maketitle{}
-\abstract{Le but de ce projet est d'écrire un programme permettant d'implémenter un jeu de la vie.}
+\abstract{Le but de ce projet est d'écrire un programme permettant d'implémenter des automates cellulaires.}
 
 \section{Automates génériques}
 
-On a construit une classe python pouvant gérer les automates cellulaires à une, deux et trois dimensions au niveau du calcul. La grille du jeu peut être borné, torique ou extensible. On a dans ce dernier cas un automate potentiellement infini.
+\paragraph{} Nous avons construit une classe python pouvant gérer les automates cellulaires à une, deux et trois dimensions au niveau du calcul. La grille du jeu est torique. On donne une fonction de règles qui détermine en fonction de l'espace \textit{relatif} à la cellule son état au prochain tour.
 
-Il s'agit du module automaton contenant les classes pour les automates cellulaires à une, deux ou trois dimensions.
+\paragraph{} Il s'agit du module {\tt automaton} contenant les classes pour les automates cellulaires à une, deux ou trois dimensions.
 
-Le constructeur d'un automate nécessite les arguments suivants :
+\paragraph{} Le constructeur d'un automate nécessite les arguments suivants :
 
 \begin{itemize}
-
-\item{rules : fonction de règles.}
-\item{w, h : dimensions}
-\item{default : état par défaut (par défaut à 0)}
-\item{disp : affichage console}
-\item{str_cell : annexe pour l'affichage console}
-\item{topology : "torus", "infinity", "bounded"}
-\item{radius : rayon de l'automate, c'est à dire la distance maximale d'influence d'une cellule (la distance du voisin le plus éloigné que prend en compte la fonction de règles.)}
-
+\item{{\tt rules} : fonction de règles.}
+\item{{\tt w, h} : dimensions}
+\item{{\tt default} : état par défaut (par défaut à 0)}
+\item{{\tt disp} : affichage console}
+\item{{\tt str\_cell} : annexe pour l'affichage console}
 \end{itemize}
 
 \section{Interface}
 
-Test d'interface et de python en mode console dans un premier temps. C'est le module d'affichage de secours hérité des classes de automaton.
+\paragraph{} Test d'interface et de python en mode console dans un premier temps. C'est le module d'affichage de secours hérité des classes de automaton.
 
-Choix de Tkinter : facilité et apprentissage d'un module standard donc utile pour créer une application rapidement, par rapport à Gtk, un peu plus difficile mais certes plus complet, et plus joli.
+\paragraph{} Choix de Tkinter : facilité et apprentissage d'un module standard donc utile pour créer une application rapidement, par rapport à Gtk, un peu plus difficile mais certes plus complet, et plus joli.
 
-On utilise le widget Canvas de Tkinter et contrairement à toute attente, les objets (lignes, rectangles, ...) se superposent sans s'écraser. La gestion de l'affichage d'un nombre minimal de cellules a aussi permis d'améliorer le temps d'affichage.
+\paragraph{} On utilise le widget {\tt Canvas} de Tkinter et contrairement à toute attente, les objets (lignes, rectangles, ...) se superposent sans s'écraser. La gestion de l'affichage d'un nombre minimal de cellules a aussi permi d'améliorer le temps d'affichage.
 
+\paragraph{} La gestion des évènements (clavier et souris) simplifie l'utilisation.
 
-La gestion des évènements (clavier et souris) simplifie l'utilisation.
-
-\begin{itemsize}
-
-
+\begin{itemize}
 \item{un clic simple modifie l'état (défaut ou non défaut)}
 \item{un clic prolongé permet de conserver l'état modifié sans avoir à cliquer sur tous les pixels}
-\item{l'appui sur espace (la plus accessible des touches !) permet de lancer et d'arrêter la simulation}
-\item{on peut rentrer un nombre précis d'étapes pour avoir un comportement plus précis. (Par exemple, l'exemple circus au bout de 110 itérations)}
-\item{on peut exporter la grille de l'automate dans la sortie standard (terminal) en appuyant sur "p", au format python.}
+\item{l'appui sur espace permet de lancer et d'arrêter la simulation}
+\item{on peut rentrer un nombre précis d'étapes pour avoir un comportement plus précis. (Par exemple, l'exemple {\tt circus} au bout de 110 itérations)}
+\item{on peut exporter la grille de l'automate dans la sortie standard (terminal) en appuyant sur {\tt p}, au format python.}
+\end{itemize}
 
+\paragraph{} Nous avons décidé d'utiliser une fenêtre de commande, et une fenêtre d'affichage. C'est un choix ergonomique et conceptuel, de plus plus facile à développer. La fenêtre de commande reste active afin de conserver les options et pouvoir ajuster. On peut également créer plusieurs fenêtres. Un problème parfois engendré est que lors de l'exécution de plusieurs simulations simultanées, l'affichage est retardé par le calcul, et l'image se met à jour plus rarement.
 
-\end{itemsize}
-
-On a créé une fenêtre de commande, et une fenêtre d'affichage. C'est un choix ergonomique et conceptuel, de plus plus facile à développer. La fenêtre de commande reste active afin de conserver les options et pouvoir ajuster. On peut également créer plusieurs fenêtres. Un problème parfois engendré est que lors de l'exécution de plusieurs simulations simultanée, l'affichage est retardé par le calcul, et l'image se met à jour plus rarement.
-
-La fenêtre de commande permet de choisir entre plusieurs automates : le jeu de la vie, le récif corallien avec différentes options, ou encore highlife. L'intérêt est que grâce à la modularité, on peut travailler avec n'importe quel automate cellulaire, quelque soit son rayon.
-
+\paragraph{} La fenêtre de commande permet de choisir entre plusieurs automates : le jeu de la vie, le récif corallien avec différentes options, ou encore un des life-likes. L'intérêt est que grâce à la modularité, on peut travailler avec n'importe quel automate cellulaire, quelque soit son rayon.
 
 \section{Le module Conway}
 
-Le Conway's game of life est largement utilisé pour les exemples d'automates cellulaires. On a donc dédié un module pour améliorer en vitesse cet automate.
+\paragraph{} Le Conway's game of life est largement utilisé pour les exemples d'automates cellulaires. On a donc dédié un module pour améliorer en vitesse cet automate.
 
-En fait, une des opérations les plus coûteuses utilisée est l'appel de fonction passée en argument grâce à un lambda. Le jeu de la vie optimise l'automate générique dans ce cas particulier et nous bénéficions d'un affichage plus fluide.
+\paragraph{} En fait, une des opérations les plus coûteuses utilisées est l'appel de fonction passée en argument grâce à un lambda. Le jeu de la vie optimise l'automate générique dans ce cas particulier et nous bénéficions d'un affichage plus fluide.
 
-On a mis des exemples afin de faire profiter à l'utilisateur d'une partie de l'immense potentialité des automates cellulaires, notamment du jeu de la vie.
+\paragraph{} Nous avons ajouté des exemples afin de faire profiter à l'utilisateur d'une partie de l'immense potentialité des automates cellulaires, notamment du jeu de la vie.
 
 \section{Récif corallien}
 
-Le récif corallien est un exemple d'automate cellulaire modélisant un phénomène réel. Les paramètres pris en compte sont l'âge d'une cellule (pour elle-même), son état, vivant ou squelette, pour ses voisins, ainsi que la direction dans laquelle elle a été créée. Cela permet de créer des structures ramifiées et c'est encore plus joli.
+\paragraph{} Le récif corallien est un exemple d'automate cellulaire modélisant un phénomène réel. Les paramètres pris en compte sont l'âge d'une cellule (pour elle-même), son état, vivant ou squelette, pour ses voisins. Les états des cellules correspondent à l'âge de la cellule et change de couleur en fonction de celui-ci, passant chronologiquement dans les couleurs suivantes bleu marine (rien), vert (naissant), jaune, orange, rouge, violet (agonisant), puis noir (mort).
+
+\paragraph{} À noter qu'il existe un modèle de récif corallien parmi les life-likes proposés. Il est accessible en choisissant {\tt Life-like} puis {\tt Coral}, c'est à dire {\tt 45678/3}.
+
+\section{Life-likes}
+
+\paragraph{} Les automates cellulaires \textit{life-likes} sont des automates cellulaires à deux états (vivant ou mort), deux dimensions et tels que l'état d'une cellule à l'étape suivante ne dépend que de son propre état et du nombre de cellules vivantes parmi les huit adjacentes.
+
+\paragraph{} Pour caractériser les life-likes on peut lister les nombres de cellules correspondant à la survie et à la naissance de la cellule. (Et par quart-exclus, la mort).
+
+\paragraph{} On note ainsi le jeu de la vie : {\tt 23/3}, c'est à dire qu'avec 2 ou 3 voisines vivantes, la cellule survit, et avec 3 voisines vivantes, elle naît. (Qu'elle soit morte ou vive)
+
+\paragraph{} La fenêtre de commande permet de choisir parmi quelques exemples de life-likes, dont une version du récif corallien {\tt coral}.
+
+\section{Optimisation}
+
+\paragraph{} Bien que nous avons évité un certain nombre de pièges de programmation python afin de ne pas perdre un temps absurde, le temps de calcul reste élevé pour de si simples opérations.
+
+\paragraph{} Les problèmes d'affichage font partie intégrante du temps écoulé. Le temps dépensé varie selon le nombre de cellules qui ne sont pas à l'état par défaut, et devient vraiment plus important que le calcul pur quand l'automate est plein.
+
+\paragraph{} Le calcul dans la partie calcul des automates est loin d'être complètement optimisé, mais par exemple, dans le cas des life-likes, on n'as pas besoin d'appel de fonction passée en argument, et il semble que les performances en sont améliorées.
+
+\paragraph{} Le problème reste que les opérations sont élémentaires mais pas vraiment regroupables. On pourrait utiliser le module {\tt ctypes} de python pour gérer les tableaux. L'idéal serait une somme de huit matrices décalées toriquement, pour calculer rapidement le nombre de voisin, mais l'opération de décaler les éléments d'un tableau est une opération coûteuse en C. (a fortiori d'une matrice)
+
+\paragraph{} Ainsi une bonne amélioration des performances pourrait être effectuée en faisant le traitement de l'information par un programme externe ou partiellement externe. L'interface restera alors le principal frein à l'affichage. Peut-être que {\tt canvas} n'est pas adapté à la situation, en particulier pour l'affichage de cellules d'un pixel.
+
+\section*{Conclusion}
+
+Nous avons finalement obtenu de bonnes fonctionnalités et une bonne compréhension d'une interface graphique finalement un peu décevante sous unix. Nous saisissons maintenant l'importance du bon choix de structure de données et l'importance et la difficulté de l'optimisation.
 
 \end{document}
 

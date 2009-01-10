@@ -1,10 +1,3 @@
-	#topologies can be :
-# torus    -> specify the size of the automaton
-# bounded  -> have to specify the behaviour for an inexistent cell, and the size
-# infinite -> have to specify the radius of the rules
-
-#for now, producing bidimensionnal automata only
-
 def copy_matrix(a):
 	c=a[:]
 	for i in xrange(len(a)):

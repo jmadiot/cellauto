@@ -3,10 +3,9 @@
 from Tkinter import *
 import time
 
-from conway import gameoflife, examples as conway_examples
-import various
 from recif import rules as reef_rules
-from recif import ramif_rules as ramif_rules
+
+from conway import gameoflife, examples as conway_examples
 from automaton import bidim
 
 import lifelikes
@@ -30,7 +29,7 @@ class commande(Tk):
 		self.mode.set(1)
 		
 		#Bouton OK
-		self.button = Button(self, text = 'OK', command = self.commande)
+		self.button = Button(self.cadre, text = 'OK', command = self.commande)
 		
 		#definition d'Entries
 		self.input1 = Entry(self.cadre)
@@ -69,7 +68,7 @@ class commande(Tk):
 		self.llcommand = Entry(self.lifelikeframe)
 		self.llcommand.insert(0, "1/1")
 		self.llcommand.config(state="disabled")
-		Label(self.lifelikeframe, text = 'Exemples de life-likes').grid()
+		Label(self.lifelikeframe, text = 'Exemples de life-likes').grid(sticky=NW)
 		self.llcommand.grid(sticky=W)
 		for radio in self.lifelikes:
 			radio.grid(sticky=W)
@@ -86,13 +85,12 @@ class commande(Tk):
 		group=Frame(self)
 		group.grid(columnspan=2)
 		Radiobutton(group, text="Conway's Game of Life", variable=self.mode, value=1, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
-		Radiobutton(group, text="HighLife",              variable=self.mode, value=4, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
 		Radiobutton(group, text="Coral",                 variable=self.mode, value=2, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
 		Radiobutton(group, text="Life-like",             variable=self.mode, value=3, command=self.changemode).grid(sticky=W)#.pack(anchor=W)
 		
 		Label(self, text = 'Exemples de grilles').grid(column=1, row=2)
 		
-		self.cadre.grid()#(fill=X)
+		self.cadre.grid(sticky=NW)#(fill=X)
 		self.conway.grid(column=1, row=3)
 		self.lifelikeframe.grid(column=2, row=0, rowspan=99)
 		self.title("Commande")
@@ -102,7 +100,7 @@ class commande(Tk):
 		self.input2.grid(row=3, column=1, sticky=W)#anchor=W)
 		self.texte3.grid(row=4, column=0, sticky=W)#anchor=W)
 		self.input3.grid(row=4, column=1, sticky=W)#anchor=W)
-		self.button.grid()
+		self.button.grid(columnspan=2)
 		self.changemode()
 		
 		self.busy=False		
@@ -190,7 +188,6 @@ class commande(Tk):
 				while i<n and command[i]!='/':
 					born.append(int(command[i]))
 					i+=1
-				print ("survive:", survive, "born", born)	
 				self.fenetre = interface(lifelike=True, w=w, h=h, cote=cote, born=born, survive=survive)
 			elif self.mode.get() == 4:
 				motif=conway_examples[self.example.get()][1]
@@ -259,7 +256,7 @@ class interface(Tk):
 		self.mainloop()
 	
 	def printc(self, _):
-		print self.bidim.cells
+		print(self.bidim.cells)
 	
 	def startstop(self, event):
 		self.anim=not self.anim
