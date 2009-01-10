@@ -1,3 +1,5 @@
+#optimisation, generalisation et exemples pour les life-likes
+
 def default_str_cell(i):
 	if int(i):
 		return "O"

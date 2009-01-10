@@ -1,3 +1,7 @@
+#!/usr/bin/python
+
+# Automate cellulaire a une dimension.
+
 #it est le nombre d iterations par defaut a 10
 #regle est un entier < 256 qui donne la regle a utiliser(inutile si regle_bin)
 #regle_bin est un texte (nombre binaire sur 8bits) qui donne la regle .(inutile si regle) 

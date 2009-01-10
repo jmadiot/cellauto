@@ -1,3 +1,5 @@
+# automates generiques a deux (ou trois) dimensions
+
 def copy_matrix(a):
 	c=a[:]
 	for i in xrange(len(a)):
